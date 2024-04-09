@@ -154,8 +154,9 @@ if __name__ == '__main__':
         # os.chdir(r'./lib/win')
         Objdll = ctypes.CDLL(r'./HCNetSDK.dll')
     else:
-        # os.chdir(r'./lib/linux/lib')
-        Objdll = cdll.LoadLibrary(r'/home/demo/tmp/hikDemo/lib/linux/lib/libhcnetsdk.so')
+        os.chdir(r'./lib/linux/lib')
+        Objdll = cdll.LoadLibrary(r'./libhcnetsdk.so')
+        # Objdll = cdll.LoadLibrary(r'/home/xzhao/workstation/shoplifting/tmp/hikDemo/lib/linux/lib/libhcnetsdk.so')
 
     SetSDKInitCfg()  # 设置组件库和SSL库加载路径
 
@@ -166,7 +167,8 @@ if __name__ == '__main__':
 
     # 加载播放库
     # Playctrldll = ctypes.CDLL(r'./PlayCtrl.dll')
-    Playctrldll = cdll.LoadLibrary(r'/home/demo/tmp/hikDemo/lib/linux/lib/libPlayCtrl.so')
+    Playctrldll = cdll.LoadLibrary(r'./libPlayCtrl.so')
+    # Playctrldll = cdll.LoadLibrary(r'/home/xzhao/workstation/shoplifting/tmp/hikDemo/lib/linux/lib/libPlayCtrl.so')
     # 获取一个播放句柄
     if not Playctrldll.PlayM4_GetPort(byref(PlayCtrl_Port)):
         print(u'获取播放库句柄失败')

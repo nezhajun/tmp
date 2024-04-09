@@ -1,0 +1,5 @@
+[2024-04-10 01:46:36.378][ERR] CCoreGlobalCtrlBase::LoadDSo, HPR_LoadDSo Failed, Path[/home/xzhao/workstation/shoplifting/tmp/hikDemo/libz.so] syserror[2]
+[2024-04-10 01:46:36.378][ERR] Load zlib failed[syserr: 2]
+[2024-04-10 01:46:36.378][INF] The COM:HCCoreBase ver is 6.1.4.15, 2020_03_05. Async:1.
+[2024-04-10 01:46:36.378][INF] The COM:Core ver is 6.1.9.48, 2023_04_10. Async:1.
+[2024-04-10 01:46:36.378][INF] This HCNetSDK ver is 6.1.9.48 Ver 2023_04_10.
