@@ -152,7 +152,7 @@ if __name__ == '__main__':
         os.chdir(r'./lib/win')
         Objdll = ctypes.CDLL(r'./HCNetSDK.dll')
     else:
-        os.chdir(r'./lib/linux')
+        os.chdir(r'./lib/linux/lib')
         Objdll = cdll.LoadLibrary(r'./libhcnetsdk.so')
 
     SetSDKInitCfg()  # 设置组件库和SSL库加载路径
