@@ -8,7 +8,8 @@ from PlayCtrl import *
 from time import sleep
 
 sys.path.append('/home/demo/tmp/hikDemo')
-sys.path.append('/home/demo/tmp/hikDemo')
+sys.path.append('/home/demo/tmp/hikDemo/lib/linux/lib')
+sys.path.append('/home/demo/tmp/hikDemo/lib/linux/lib/HCNetSDKCom')
 # 登录的设备信息
 DEV_IP = create_string_buffer(b'192.168.1.164')
 DEV_PORT = 8000
@@ -38,6 +39,7 @@ def SetSDKInitCfg():
     strPath = os.getcwd().encode('gbk')
     sdk_ComPath = NET_DVR_LOCAL_SDK_PATH()
     sdk_ComPath.sPath = strPath
+    print(strPath)
     Objdll.NET_DVR_SetSDKInitCfg(2, byref(sdk_ComPath))
     if WINDOWS_FLAG:
         Objdll.NET_DVR_SetSDKInitCfg(3, create_string_buffer(strPath + b'\libcrypto-1_1-x64.dll'))
