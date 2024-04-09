@@ -2,9 +2,9 @@ from ctypes import *
 import sys
 
 # 回调函数类型定义
-fun_ctype = WINFUNCTYPE  # 指针函数类型
 if 'linux' in sys.platform:
     fun_ctype = CFUNCTYPE
+else:fun_ctype = WINFUNCTYPE  # 指针函数类型
 
 # 定义预览参数结构体
 class FRAME_INFO(Structure):
