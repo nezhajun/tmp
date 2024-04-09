@@ -1,16 +1,16 @@
 import os
 import platform
-import tkinter
-from tkinter import *
+# import tkinter
+# from tkinter import *
 from HCNetSDK import *
 from PlayCtrl import *
 from time import sleep
 
 # 登录的设备信息
-DEV_IP = create_string_buffer(b'10.17.35.231')
+DEV_IP = create_string_buffer(b'192.168.1.164')
 DEV_PORT = 8000
 DEV_USER_NAME = create_string_buffer(b'admin')
-DEV_PASSWORD = create_string_buffer(b'abcd1234')
+DEV_PASSWORD = create_string_buffer(b'123456789abc')
 
 WINDOWS_FLAG = True
 win = None  # 预览窗口
@@ -117,29 +117,29 @@ def InputData(fileMp4, Playctrldll):
 
 if __name__ == '__main__':
     # 创建窗口
-    win = tkinter.Tk()
-    #固定窗口大小
-    win.resizable(0, 0)
-    win.overrideredirect(True)
+    # win = tkinter.Tk()
+    # #固定窗口大小
+    # win.resizable(0, 0)
+    # win.overrideredirect(True)
 
-    sw = win.winfo_screenwidth()
-    # 得到屏幕宽度
-    sh = win.winfo_screenheight()
-    # 得到屏幕高度
+    # sw = win.winfo_screenwidth()
+    # # 得到屏幕宽度
+    # sh = win.winfo_screenheight()
+    # # 得到屏幕高度
 
-    # 窗口宽高
-    ww = 512
-    wh = 384
-    x = (sw - ww) / 2
-    y = (sh - wh) / 2
-    win.geometry("%dx%d+%d+%d" % (ww, wh, x, y))
+    # # 窗口宽高
+    # ww = 512
+    # wh = 384
+    # x = (sw - ww) / 2
+    # y = (sh - wh) / 2
+    # win.geometry("%dx%d+%d+%d" % (ww, wh, x, y))
 
-    # 创建退出按键
-    b = Button(win, text='退出', command=win.quit)
-    b.pack()
-    # 创建一个Canvas，设置其背景色为白色
-    cv = tkinter.Canvas(win, bg='white', width=ww, height=wh)
-    cv.pack()
+    # # 创建退出按键
+    # b = Button(win, text='退出', command=win.quit)
+    # b.pack()
+    # # 创建一个Canvas，设置其背景色为白色
+    # cv = tkinter.Canvas(win, bg='white', width=ww, height=wh)
+    # cv.pack()
 
     # 获取系统平台
     GetPlatform()
@@ -157,7 +157,7 @@ if __name__ == '__main__':
     # 初始化DLL
     Objdll.NET_DVR_Init()
     # 启用SDK写日志
-    Objdll.NET_DVR_SetLogToFile(3, bytes('C:\\SdkLog_Python\\', encoding="gbk"), False)
+    Objdll.NET_DVR_SetLogToFile(3, bytes('.\\SdkLog_Python\\', encoding="gbk"), False)
 
     # 加载播放库
     Playctrldll = ctypes.CDLL(r'./PlayCtrl.dll')
@@ -187,24 +187,24 @@ if __name__ == '__main__':
         exit()
 
     #show Windows
-    win.mainloop()
+    # win.mainloop()
 
-    # 开始云台控制
-    lRet = Objdll.NET_DVR_PTZControl(lRealPlayHandle, PAN_LEFT, 0)
-    if lRet == 0:
-        print ('Start ptz control fail, error code is: %d' % Objdll.NET_DVR_GetLastError())
-    else:
-        print ('Start ptz control success')
+    # # 开始云台控制
+    # lRet = Objdll.NET_DVR_PTZControl(lRealPlayHandle, PAN_LEFT, 0)
+    # if lRet == 0:
+    #     print ('Start ptz control fail, error code is: %d' % Objdll.NET_DVR_GetLastError())
+    # else:
+    #     print ('Start ptz control success')
 
-    # 转动一秒
-    sleep(1)
+    # # 转动一秒
+    # sleep(1)
 
-    # 停止云台控制
-    lRet = Objdll.NET_DVR_PTZControl(lRealPlayHandle, PAN_LEFT, 1)
-    if lRet == 0:
-        print('Stop ptz control fail, error code is: %d' % Objdll.NET_DVR_GetLastError())
-    else:
-        print('Stop ptz control success')
+    # # 停止云台控制
+    # lRet = Objdll.NET_DVR_PTZControl(lRealPlayHandle, PAN_LEFT, 1)
+    # if lRet == 0:
+    #     print('Stop ptz control fail, error code is: %d' % Objdll.NET_DVR_GetLastError())
+    # else:
+    #     print('Stop ptz control success')
 
     # 关闭预览
     Objdll.NET_DVR_StopRealPlay(lRealPlayHandle)
