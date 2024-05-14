@@ -85,7 +85,7 @@ class BaseAdapter:
         err = self.HCNetSDK_obj.NET_DVR_Cleanup()
         # logging.info("释放资源", result)
         
-    def loginDev(selof)
+    def login_Dev(selof)
         
 
 if __name__ == '__main__':
