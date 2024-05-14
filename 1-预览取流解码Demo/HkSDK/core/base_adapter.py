@@ -1,12 +1,29 @@
 import os
+import platform
 import ctypes
+import HCNetSDK
+
+WINDOWS_FLAG = True
+
+def GetPlatform():
+    sysstr = platform.system()
+    print('' + sysstr)
+    if sysstr != "Windows":
+        global WINDOWS_FLAG
+        WINDOWS_FLAG = False
 
 
 # 海康威视基础类，AI摄像机，通用摄像机，门禁产品，出入口产品通用
 class BaseAdapter:
+    
     # 动态sdk文件 .so .dll
     so_list = []
 
+    def __init__(self,id=None) -> None:
+        self.BaseID = id
+        self.HCNetSDK_obj = None
+        self.PlayCtrl_obj = None
+    
     def set_lib(self, so_list: []): # 设置所有的so文件
         self.so_list = so_list
 
@@ -26,54 +43,49 @@ class BaseAdapter:
                 self.add_lib(path + file + "/", suffix)
 
 
-    # python 调用 sdk 指定方法
-    def call_lib_cpp(self, func_name, *args):
-        for so_lib in self.so_list:
-            try:
-                lib = ctypes.CDLL.LoadLibrary(so_lib)
-                try:
-                    value = eval("lib.%s" % func_name)(*args)
-                    # logging.info("调用的库：" + so_lib)
-                    # logging.info("执行成功,返回值：" + str(value))
-                    return value
-                except:
-                    continue
-            except:
-                # logging.info("库文件载入失败：" + so_lib)
-                continue
+    def set_sdk_config(self, enumType, sdkPath):     # 设置sdk初始化参数
+        # 设置HCNetSDKCom组件库和SSL库加载路径
+        # print(os.getcwd())
+        if WINDOWS_FLAG:
+            strPath = os.getcwd().encode('gbk')
+            sdk_ComPath = HCNetSDK.NET_DVR_LOCAL_SDK_PATH()
+            sdk_ComPath.sPath = strPath
+            self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(2, ctypes.byref(sdk_ComPath))
+            self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(3, ctypes.create_string_buffer(strPath + b'\libcrypto-1_1-x64.dll'))
+            self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(4, ctypes.create_string_buffer(strPath + b'\libssl-1_1-x64.dll'))
+        else:
+            strPath = os.getcwd().encode('utf-8')
+            sdk_ComPath = HCNetSDK.NET_DVR_LOCAL_SDK_PATH()
+            sdk_ComPath.sPath = strPath
+            self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(2, ctypes.byref(sdk_ComPath))
+            self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(3, ctypes.create_string_buffer(strPath + b'/libcrypto.so.1.1'))
+            self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(4, ctypes.create_string_buffer(strPath + b'/libssl.so.1.1'))
 
-        # logging.error("没有找到接口！")
-        return False
 
+    def sdk_init(self):     # 初始化海康微视 sdk 
+        if WINDOWS_FLAG == True:
+            os.chdir(r'./lib/win')
+            self.HCNetSDK_obj = ctypes.CDLL(r'./HCNetSDK.dll')
+        else:
+            os.chdir(r'./lib/linux')
+            self.HCNetSDK_obj = ctypes.cdll.LoadLibrary(r'./libhcnetsdk.so')
 
-    def init_sdk(self):     # 初始化海康微视 sdk
-        init_res = self.call_cpp("NET_DVR_Init")  # SDK初始化
-        if init_res:
+        self.set_sdk_config()
+
+        err = self.HCNetSDK_obj.NET_DVR_Init()
+        if err:
             # logging.info("SDK初始化成功")
             return True
         else:
             # self.print_error("NET_DVR_GetLastError 初始化SDK失败: the error code is ")
             return False
 
-    def set_sdk_config(self, enumType, sdkPath):     # 设置sdk初始化参数
-        # req = base.NET_DVR_LOCAL_SDK_PATH()
-        req
-        sPath = bytes(sdkPath, "ascii")
-        i = 0
-        for o in sPath:
-            req.sPath[i] = o
-            i += 1
-
-        ptr = ctypes.byref(req)
-        res = self.call_cpp("NET_DVR_SetSDKInitCfg", enumType, ptr)
-        if res < 0:
-            self.print_error("NET_DVR_SetSDKInitCfg 启动预览失败: the error code is")
-        return res
-
 
     def sdk_clean(self):     # 释放sdk
-        result = self.call_cpp("NET_DVR_Cleanup")
+        err = self.HCNetSDK_obj.NET_DVR_Cleanup()
         # logging.info("释放资源", result)
+        
+    def loginDev(selof)
         
 
 if __name__ == '__main__':
