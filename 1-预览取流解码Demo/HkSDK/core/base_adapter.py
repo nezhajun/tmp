@@ -66,9 +66,11 @@ class BaseAdapter:
         if WINDOWS_FLAG == True:
             os.chdir(r'./lib/win')
             self.HCNetSDK_obj = ctypes.CDLL(r'./HCNetSDK.dll')
+            self.PlayCtrl_obj = ctypes.CDLL(r'./PlayCtrl.dll')  # 加载播放库
         else:
             os.chdir(r'./lib/linux')
             self.HCNetSDK_obj = ctypes.cdll.LoadLibrary(r'./libhcnetsdk.so')
+            self.PlayCtrl_obj = ctypes.cdll.LoadLibrary(r'./libPlayCtrl.so')
 
         self.set_sdk_config()
 
@@ -80,13 +82,22 @@ class BaseAdapter:
             # self.print_error("NET_DVR_GetLastError 初始化SDK失败: the error code is ")
             return False
 
-
     def sdk_clean(self):     # 释放sdk
         err = self.HCNetSDK_obj.NET_DVR_Cleanup()
         # logging.info("释放资源", result)
-        
-    def login_Dev(selof)
-        
+    
+    def get_LastErrorCode(self):
+        return self.HCNetSDK_obj.NET_DVR_GetLastError()
+
+    def login_dev(self,DEV_IP,DEV_PORT,DEV_USER_NAME,DEV_PASSWORD):
+        device_info = HCNetSDK.NET_DVR_DEVICEINFO_V30()
+        lUserId = self.HCNetSDK_obj.NET_DVR_Login_V30(DEV_IP, DEV_PORT, DEV_USER_NAME, DEV_PASSWORD, ctypes.byref(device_info))
+        return (lUserId, device_info)
+
+    def logout_dev(self,lUserId):
+        self.HCNetSDK_obj.NET_DVR_Logout(lUserId)
+
+
 
 if __name__ == '__main__':
     test_base = BaseAdapter()
