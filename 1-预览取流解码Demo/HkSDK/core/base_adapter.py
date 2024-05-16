@@ -43,11 +43,15 @@ class BaseAdapter:
                 self.add_lib(path + file + "/", suffix)
 
 
-    def set_sdk_config(self, enumType, sdkPath):     # 设置sdk初始化参数
+    def set_sdk_config(self):     # 设置sdk初始化参数
         # 设置HCNetSDKCom组件库和SSL库加载路径
         # print(os.getcwd())
+        global WINDOWS_FLAG
+        GetPlatform()
         if WINDOWS_FLAG:
             strPath = os.getcwd().encode('gbk')
+            print("aaaaaa")
+            print(strPath)
             sdk_ComPath = HCNetSDK.NET_DVR_LOCAL_SDK_PATH()
             sdk_ComPath.sPath = strPath
             self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(2, ctypes.byref(sdk_ComPath))
@@ -64,11 +68,11 @@ class BaseAdapter:
 
     def sdk_init(self):     # 初始化海康微视 sdk 
         if WINDOWS_FLAG == True:
-            os.chdir(r'./lib/win')
+            os.chdir(r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo\HkSDK\lib\win')
             self.HCNetSDK_obj = ctypes.CDLL(r'./HCNetSDK.dll')
             self.PlayCtrl_obj = ctypes.CDLL(r'./PlayCtrl.dll')  # 加载播放库
         else:
-            os.chdir(r'./lib/linux')
+            os.chdir(r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo\HkSDK\lib\linux')
             self.HCNetSDK_obj = ctypes.cdll.LoadLibrary(r'./libhcnetsdk.so')
             self.PlayCtrl_obj = ctypes.cdll.LoadLibrary(r'./libPlayCtrl.so')
 
