@@ -13,6 +13,18 @@ def GetPlatform():
         WINDOWS_FLAG = False
 
 
+cdll_list = ['./HCNetSDK.dll','./libhcnetsdk.so',\
+            './PlayCtrl.dll','./libPlayCtrl.so']
+
+def get_libcdll(cdll_id):
+    if WINDOWS_FLAG == True:
+        os.chdir(r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo\HkSDK\lib\win')
+        return ctypes.CDLL(cdll_list[cdll_id])  # 加载播放库
+    else:
+        os.chdir(r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo\HkSDK\lib\linux')
+        return ctypes.cdll.LoadLibrary(cdll_list[cdll_id+1])
+
+
 # 海康威视基础类，AI摄像机，通用摄像机，门禁产品，出入口产品通用
 class BaseAdapter:
     
@@ -22,7 +34,6 @@ class BaseAdapter:
     def __init__(self,id=None) -> None:
         self.BaseID = id
         self.HCNetSDK_obj = None
-        self.PlayCtrl_obj = None
     
     def set_lib(self, so_list: []): # 设置所有的so文件
         self.so_list = so_list
@@ -66,18 +77,9 @@ class BaseAdapter:
             self.HCNetSDK_obj.NET_DVR_SetSDKInitCfg(4, ctypes.create_string_buffer(strPath + b'/libssl.so.1.1'))
 
 
-    def sdk_init(self):     # 初始化海康微视 sdk 
-        if WINDOWS_FLAG == True:
-            os.chdir(r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo\HkSDK\lib\win')
-            self.HCNetSDK_obj = ctypes.CDLL(r'./HCNetSDK.dll')
-            self.PlayCtrl_obj = ctypes.CDLL(r'./PlayCtrl.dll')  # 加载播放库
-        else:
-            os.chdir(r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo\HkSDK\lib\linux')
-            self.HCNetSDK_obj = ctypes.cdll.LoadLibrary(r'./libhcnetsdk.so')
-            self.PlayCtrl_obj = ctypes.cdll.LoadLibrary(r'./libPlayCtrl.so')
-
+    def sdk_init(self):     # 初始化海康微视 sdk
+        self.HCNetSDK_obj = get_libcdll(0)
         self.set_sdk_config()
-
         err = self.HCNetSDK_obj.NET_DVR_Init()
         if err:
             # logging.info("SDK初始化成功")
@@ -100,7 +102,6 @@ class BaseAdapter:
 
     def logout_dev(self,lUserId):
         self.HCNetSDK_obj.NET_DVR_Logout(lUserId)
-
 
 
 if __name__ == '__main__':

@@ -27,3 +27,18 @@ DISPLAYCBFUN = fun_ctype(None, c_long, c_char_p, c_long, c_long, c_long, c_long,
 # 解码回调函数
 DECCBFUNWIN = fun_ctype(None, c_long, POINTER(c_char), c_long, POINTER(FRAME_INFO), c_void_p, c_void_p)
 
+
+new_path = r'C:\Users\徐旭\Desktop\HIK\tmp\1-预览取流解码Demo'
+if new_path not in sys.path:
+    sys.path.append(new_path)
+
+from HkSDK.core.base_adapter import get_libcdll
+
+class PlayAdapter():
+    def __init__(self) -> None:
+        self.PlayCtrl_obj = get_libcdll(2)
+    
+    def get_port(self):
+        self.PlayCtrl_obj.PlayM4_GetPort()
+        
+    
