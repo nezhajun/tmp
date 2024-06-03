@@ -51,5 +51,9 @@ class PlayAdapter():
     def InputData(self,pBuffer, dwBufSize):
         return self.PlayCtrl_obj.PlayM4_InputData(self.PlayCtrl_Port, pBuffer, dwBufSize)
     
+    def SetDecCallBackExMend(self,DecCBFun):
+        FuncDecCB = DECCBFUNWIN(DecCBFun)
+        return self.PlayCtrl_obj.PlayM4_SetDecCallBackExMend(self.PlayCtrl_Port, FuncDecCB, None, 0, None)
+    
     def Play(self,winfo_id_):
         return self.PlayCtrl_obj.PlayM4_Play(self.PlayCtrl_Port, winfo_id_)

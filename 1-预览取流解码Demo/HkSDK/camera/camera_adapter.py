@@ -15,6 +15,10 @@ cnt = 0
 
 playm4_adapter = PlayCtrl.PlayAdapter()
 
+def DecCBFun(nPort, pBuf, nSize, pFrameInfo, nUser, nReserved2):
+    pass
+
+# 这样写的话，所有摄像头共用一个变量 playm4_adapter，这是有问题的，最好需要每个摄像头
 def RealDataCallBack_V30(lPlayHandle,dwDataType,pBuffer,dwBufSize,pUser):
     if dwDataType == HCNetSDK.NET_DVR_SYSHEAD:  # 系统头数据
         if not playm4_adapter.get_port():
@@ -26,9 +30,12 @@ def RealDataCallBack_V30(lPlayHandle,dwDataType,pBuffer,dwBufSize,pUser):
         playm4_adapter.SetStreamOpenMode() # 设置流播放模式
         print("set_stream_open_mode success")
         
-        playm4_adapter.OpenStream(pBuffer, dwBufSize, 1024 * 1024)
-        print("open_stream success")
-        
+        if playm4_adapter.OpenStream(pBuffer, dwBufSize, 1024 * 1024):
+            print("open_stream success")
+            # 设置解码回调，可以返回解码后YUV视频数据
+            global DecCBFun
+            playm4_adapter.SetDecCallBackExMend(DecCBFun)
+
         if playm4_adapter.Play(winfo_id):
             print(u'播放库播放成功')
         else:
