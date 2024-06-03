@@ -37,8 +37,19 @@ from HkSDK.core.base_adapter import get_libcdll
 class PlayAdapter():
     def __init__(self) -> None:
         self.PlayCtrl_obj = get_libcdll(2)
+        self.PlayCtrl_Port = c_long(-1)
     
     def get_port(self):
-        self.PlayCtrl_obj.PlayM4_GetPort()
-        
+        return self.PlayCtrl_obj.PlayM4_GetPort(byref(self.PlayCtrl_Port))
     
+    def SetStreamOpenMode(self):
+        return self.PlayCtrl_obj.PlayM4_SetStreamOpenMode(self.PlayCtrl_Port, 0)
+    
+    def OpenStream(self, pBuffer, dwBufSize, nBufPoolSize):
+        return self.PlayCtrl_obj.PlayM4_OpenStream(self.PlayCtrl_Port, pBuffer, dwBufSize, nBufPoolSize)
+    
+    def InputData(self,pBuffer, dwBufSize):
+        return self.PlayCtrl_obj.PlayM4_InputData(self.PlayCtrl_Port, pBuffer, dwBufSize)
+    
+    def Play(self,winfo_id_):
+        return self.PlayCtrl_obj.PlayM4_Play(self.PlayCtrl_Port, winfo_id_)

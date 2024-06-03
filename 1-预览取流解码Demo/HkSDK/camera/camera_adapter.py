@@ -13,6 +13,35 @@ import tkinter
 
 cnt = 0
 
+playm4_adapter = PlayCtrl.PlayAdapter()
+
+def RealDataCallBack_V30(lPlayHandle,dwDataType,pBuffer,dwBufSize,pUser):
+    if dwDataType == HCNetSDK.NET_DVR_SYSHEAD:  # 系统头数据
+        if not playm4_adapter.get_port():
+            print(u'获取播放库句柄失败')
+            return
+        print("get_port success")
+        if dwBufSize == 0:
+            return
+        playm4_adapter.SetStreamOpenMode() # 设置流播放模式
+        print("set_stream_open_mode success")
+        
+        playm4_adapter.OpenStream(pBuffer, dwBufSize, 1024 * 1024)
+        print("open_stream success")
+        
+        if playm4_adapter.Play(winfo_id):
+            print(u'播放库播放成功')
+        else:
+            print(u'播放库播放失败')
+        
+    elif dwDataType == HCNetSDK.NET_DVR_STREAMDATA:  # 流数据
+        playm4_adapter.InputData(pBuffer, dwBufSize)
+    elif dwDataType is HCNetSDK.NET_DVR_AUDIOSTRAMDATA:  # 音频数据
+        print("音频数据")
+    elif dwDataType is HCNetSDK.NET_DVR_PRIVATE_DATA:  # 私有数据
+        print("私有数据")
+
+
 class CameraAdapter(BaseAdapter):
     PlayCtrl_Port = ctypes.c_long(-1)
     
