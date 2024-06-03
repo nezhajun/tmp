@@ -18,7 +18,8 @@ playm4_adapter = PlayCtrl.PlayAdapter()
 def DecCBFun(nPort, pBuf, nSize, pFrameInfo, nUser, nReserved2):
     pass
 
-# 这样写的话，所有摄像头共用一个变量 playm4_adapter，这是有问题的，最好需要每个摄像头
+# 这样写的话，所有摄像头共用一个变量 playm4_adapter，这是有问题的，最好需要每个摄像头使用不同的 playm4_adapter，
+# 可以通过 pUser 来传递不同的 playm4_adapter
 def RealDataCallBack_V30(lPlayHandle,dwDataType,pBuffer,dwBufSize,pUser):
     if dwDataType == HCNetSDK.NET_DVR_SYSHEAD:  # 系统头数据
         if not playm4_adapter.get_port():
